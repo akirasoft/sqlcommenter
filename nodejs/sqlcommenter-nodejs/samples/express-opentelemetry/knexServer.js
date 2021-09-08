@@ -2,6 +2,7 @@ const { LogLevel } = require("@opentelemetry/core");
 // adding opentelemetry API and propagation
 const opentelemetry = require('@opentelemetry/api');
 const propagation = opentelemetry.propagation;
+const trace = opentelemetry.trace;
 // back to original stuff
 const { NodeTracerProvider } = require("@opentelemetry/node");
 const { BatchSpanProcessor } = require("@opentelemetry/tracing");
@@ -42,11 +43,11 @@ async function main() {
   app.use(sqlcommenterMiddleware);
 
   app.get("/", async (req, res) => {
-    // see if we can get context?
-    const ctx = tracer.setSpan(opentelemetry.context.active(), span);
-    console.log("CTX: "+JSON.stringify(ctx));
+
     const span = tracer.startSpan("sleep for no reason (parent)");
-    
+    // see if we can get context?
+    const ctx = trace.setSpan(opentelemetry.context.active(), span);
+    console.log("CTX: "+JSON.stringify(ctx));    
 
     await sleep(250);
     span.end();
