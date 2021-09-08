@@ -46,7 +46,8 @@ async function main() {
 
     const span = tracer.startSpan("sleep for no reason (parent)");
     // see if we can get context?
-    console.log("CTX: "+JSON.stringify(opentelemetry.context.active()));    
+
+    console.log("CTX: "+JSON.stringify(tracer.getCurrentSpan().context()));    
 
     await sleep(250);
     span.end();
