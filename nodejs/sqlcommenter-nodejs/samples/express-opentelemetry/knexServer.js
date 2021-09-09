@@ -1,9 +1,4 @@
 const { LogLevel } = require("@opentelemetry/core");
-// adding opentelemetry API and propagation
-const opentelemetry = require('@opentelemetry/api');
-const propagation = opentelemetry.propagation;
-const trace = opentelemetry.trace;
-// back to original stuff
 const { NodeTracerProvider } = require("@opentelemetry/node");
 const { BatchSpanProcessor } = require("@opentelemetry/tracing");
 const {
