@@ -42,13 +42,12 @@ async function main() {
 
   app.get("/", async (req, res) => {
     console.log(req.headers);
-    const currentSpan = api.trace.getSpan(api.context.active());
-    
-    // display traceid in the terminal
-    console.log(`traceid: ${currentSpan.spanContext().traceId}`);
+
 
     const span = tracer.startSpan("sleep for no reason (parent)");
-
+    const currentSpan = api.trace.getSpan(api.context.active());    
+    // display traceid in the terminal
+    console.log(`traceid: ${currentSpan.spanContext().traceId}`);
     await sleep(250);
     span.end();
 
