@@ -5,7 +5,8 @@ const {
   TraceExporter,
 } = require("@google-cloud/opentelemetry-cloud-trace-exporter");
 const { logger, sleep } = require("./util");
-const { api, diag, DiagConsoleLogger, DiagLogLevel } = require("@opentelemetry/api");
+const { diag, DiagConsoleLogger, DiagLogLevel } = require("@opentelemetry/api");
+const api = require("@opentelemetry/api"); 
 
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ALL);
 
@@ -42,6 +43,7 @@ async function main() {
   app.get("/", async (req, res) => {
     console.log(req.headers);
     const currentSpan = api.trace.getSpan(api.context.active());
+    
     // display traceid in the terminal
     console.log(`traceid: ${currentSpan.spanContext().traceId}`);
 
