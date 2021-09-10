@@ -45,9 +45,10 @@ async function main() {
 
 
     const span = tracer.startSpan("sleep for no reason (parent)");
-    const currentSpan = api.trace.getSpan(api.context.active());    
+    //const currentSpan = api.trace.getSpan(api.context.active());    
     // display traceid in the terminal
-    console.log(`traceid: ${currentSpan.spanContext().traceId}`);
+    //console.log(`traceid: ${currentSpan.spanContext().traceId}`);
+    console.log(span.traceId);
     await sleep(250);
     span.end();
 
