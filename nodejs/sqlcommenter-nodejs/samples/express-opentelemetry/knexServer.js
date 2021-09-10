@@ -5,9 +5,11 @@ const {
   TraceExporter,
 } = require("@google-cloud/opentelemetry-cloud-trace-exporter");
 const { logger, sleep } = require("./util");
+const { api, diag, DiagConsoleLogger, DiagLogLevel } = require("@opentelemetry/api");
+
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ALL);
 
 const tracerProvider = new NodeTracerProvider({
-  logLevel: LogLevel.DEBUG,
   logger,
 });
 tracerProvider.addSpanProcessor(
@@ -38,17 +40,19 @@ async function main() {
   app.use(sqlcommenterMiddleware);
 
   app.get("/", async (req, res) => {
+    console.log(req.headers);
+    const currentSpan = api.trace.getSpan(api.context.active());
+    // display traceid in the terminal
+    console.log(`traceid: ${currentSpan.spanContext().traceId}`);
 
     const span = tracer.startSpan("sleep for no reason (parent)");
-    // see if we can get context?
-
-    console.log("CTX: "+JSON.stringify(tracer.getCurrentSpan().context()));    
 
     await sleep(250);
     span.end();
 
     const getRecordsSpan = tracer.startSpan("query records with knex");
-    await tracer.withSpan(getRecordsSpan, async () => {
+
+    await tracer.startActiveSpan(getRecordsSpan, async () => {
       tracer.startSpan("testing 123").end();
       const todos = await knex.select().table("Todos").limit(20);
       const countByDone = await knex
