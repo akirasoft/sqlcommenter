@@ -48,8 +48,8 @@ async function main() {
     const currentSpan = trace.getSpan(context.active());    
     // display traceid in the terminal
     //console.log(`traceid: ${currentSpan.spanContext().traceId}`);
-    console.log(span.spanContext().traceId)
-    console.log(span.spanContext().spanId)
+    console.log("traceId: ", span.spanContext().traceId)
+    console.log("spanId: ", span.spanContext().spanId)
     await sleep(250);
     span.end();
 
