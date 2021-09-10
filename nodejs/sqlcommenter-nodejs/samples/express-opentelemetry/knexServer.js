@@ -5,8 +5,8 @@ const {
   TraceExporter,
 } = require("@google-cloud/opentelemetry-cloud-trace-exporter");
 const { logger, sleep } = require("./util");
-const { diag, DiagConsoleLogger, DiagLogLevel } = require("@opentelemetry/api");
-const api = require("@opentelemetry/api"); 
+const { context, trace, diag, DiagConsoleLogger, DiagLogLevel } = require("@opentelemetry/api");
+// const api = require("@opentelemetry/api"); 
 
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ALL);
 
@@ -45,10 +45,11 @@ async function main() {
 
 
     const span = tracer.startSpan("sleep for no reason (parent)");
-    //const currentSpan = api.trace.getSpan(api.context.active());    
+    const currentSpan = trace.getSpan(context.active());    
     // display traceid in the terminal
     //console.log(`traceid: ${currentSpan.spanContext().traceId}`);
-    console.log(span.traceId);
+    console.log(span.spanContext().traceId)
+    console.log(span.spanContext().spanId)
     await sleep(250);
     span.end();
 
